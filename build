@@ -1,0 +1,3 @@
+#!/bin/bash
+docker build --target=bookworm-base -t $DOCKER_REPO:latest -t $DOCKER_REPO:base .
+docker build --target=bookworm-plus -t $DOCKER_REPO:plus .
