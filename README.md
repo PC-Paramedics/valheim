@@ -1,36 +1,34 @@
-[![](https://img.shields.io/codacy/grade/33ce0225cb214844b8995d24c75a3080.svg)](https://hub.docker.com/r/cm2network/valheim/) [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/cm2network/valheim)](https://hub.docker.com/r/cm2network/valheim/) [![Docker Stars](https://img.shields.io/docker/stars/cm2network/valheim.svg)](https://hub.docker.com/r/cm2network/valheim/) [![Docker Pulls](https://img.shields.io/docker/pulls/cm2network/valheim.svg)](https://hub.docker.com/r/cm2network/valheim/) [![](https://img.shields.io/docker/image-size/cm2network/valheim)](https://img.shields.io/docker/image-size/cm2network/valheim) [![Discord](https://img.shields.io/discord/747067734029893653)](https://discord.gg/7ntmAwM)
-# Supported tags and respective `Dockerfile` links
--	[`base`, `latest` (*bookworm/Dockerfile*)](https://github.com/CM2Walki/Valheim/blob/master/bookworm/Dockerfile)
--	[`plus` (*bookworm/Dockerfile*)](https://github.com/CM2Walki/Valheim/blob/master/bookworm/Dockerfile)
-
 # What is Valheim?
-A brutal exploration and survival game for 1-10 players, set in a procedurally-generated purgatory inspired by viking culture. Battle, build, and conquer your way to a saga worthy of Odin’s patronage!
+A brutal exploration and survival game for 1-10 players, set in a procedurally-generated purgatory inspired by Viking culture. Battle, build, and conquer your way to a saga worthy of Odin’s patronage!
 
 >  [Valheim](https://store.steampowered.com/app/892970/Valheim/)
 
 <img src="https://static.wikia.nocookie.net/valheim/images/4/4c/Logo_valheim.png" alt="logo" width="300"/></img>
 
 # How to use this image
+
+This image is a fork of [CM2Walki/Valheim](https://github.com/CM2Walki/Valheim) to add support for the [V+ Reforged](https://github.com/Grantapher/ValheimPlus) mod. The previous [Valheim Plus](https://github.com/valheimPlus/ValheimPlus) mod is no longer maintained.
+
 ## Hosting a simple game server
 
 Running on the *host* interface (recommended):<br/>
 ```console
-$ docker run -d --net=host --name=valheim-dedicated cm2network/valheim
+$ docker run -d --net=host --name=valheim-dedicated martingwheeler/valheim
 ```
 
 Running using a bind mount for data persistence on container recreation:
 ```console
 $ mkdir -p $(pwd)/valheim-data
 $ chmod 777 $(pwd)/valheim-data # Makes sure the directory is writeable by the unprivileged container user
-$ docker run -d --net=host -v $(pwd)/valheim-data:/home/steam/valheim-dedicated/ --name=valheim-dedicated cm2network/valheim
+$ docker run -d --net=host -v $(pwd)/valheim-data:/home/steam/valheim-dedicated/ --name=valheim-dedicated martingwheeler/valheim
 ---
 $ docker volume create valheim-plus-data # For valheim:plus - Create an additional world volume
-$ docker run -d --net=host -v $(pwd)/valheim-data:/home/steam/valheim-dedicated/ -v valheim-plus-data:/home/steam/.config/unity3d/IronGate/Valheim/ --name=valheim-plus-dedicated cm2network/valheim:plus
+$ docker run -d --net=host -v $(pwd)/valheim-data:/home/steam/valheim-dedicated/ -v valheim-plus-data:/home/steam/.config/unity3d/IronGate/Valheim/ --name=valheim-plus-dedicated martingwheeler/valheim:plus
 ```
 
 Running multiple instances (increment SERVER_PORT by two, there is no way to overwrite the steam query port, it will always be SERVER_PORT + 1!):
 ```console
-$ docker run -d --net=host -e SERVER_PORT=2458 --name=valheim-dedicated2 cm2network/valheim
+$ docker run -d --net=host -e SERVER_PORT=2458 --name=valheim-dedicated2 martingwheeler/valheim
 ```
 
 **It's also recommended to use "--cpuset-cpus=" to limit the game server to a specific core & thread.**<br/>
@@ -57,7 +55,9 @@ ADDITIONAL_ARGS="" (Pass additional arguments to the server. Make sure to escape
 If you want to learn more about configuring a Valheim server check this [documentation](https://valheim.fandom.com/wiki/Hosting_Servers).
 
 ## Config
-You can find the `adminlist.txt`, `bannedlist.txt` and `permittedlist.txt` here: `/home/steam/valheim-dedicated/Worlds`.
+You can find the `adminlist.txt`, `bannedlist.txt` and `permittedlist.txt`:
+- `/home/steam/valheim-dedicated/Worlds` for tag `valheim:latest`
+- `/home/steam/.config/unity3d/IronGate/Valheim/Worlds` for tag `valheim:plus`
 
 The world database files can be found in:
 - `/home/steam/valheim-dedicated/Worlds/worlds` for tag `valheim:latest`
@@ -70,9 +70,9 @@ The `valheim` images come in two flavors, each designed for a specific use case.
 This is the defacto image. If you are unsure about what your needs are, you probably want to use this one. It is a bare-minimum Valheim dedicated server containing no 3rd party plugins.<br/>
 
 ## `valheim:plus`
-This is a specialized image. It contains the popular mod [ValheimPlus](https://github.com/valheimPlus/ValheimPlus). 
+This is a specialized image. It contains the popular mod [V+ Reforged](https://github.com/Grantapher/ValheimPlus). 
 
-Note: The game world is saved in a different directory in this tag, make sure to create an additional volume for world persistency across container recreations. See [#Hosting a simple game server](https://github.com/CM2Walki/Valheim/edit/master/README.md#hosting-a-simple-game-server)
+Note: The game world is saved in a different directory in this tag, make sure to create an additional volume for world persistency across container recreations. See [#Hosting a simple game server](#hosting-a-simple-game-server) above.
 
 # Contributors
-[![Contributors Display](https://badges.pufler.dev/contributors/CM2Walki/Valheim?size=50&padding=5&bots=false)](https://github.com/CM2Walki/Valheim/graphs/contributors)
+[![Contributors Display](https://badges.pufler.dev/contributors/martinwheeler/valheim?size=50&padding=5&bots=false)](https://github.com/martinwheeler/valheim/graphs/contributors)
